@@ -64,3 +64,5 @@ To work around this, using a tree structure overcomes this issue:
 This program remains a work in progress and I have attempted to rewrite this multiple times over the years.
 Perhaps one day I may actually build enough of it to be satisfied?
 We'll wait and see for now...
+
+Note that this program was developed using an IDE, namely Code::Blocks.
