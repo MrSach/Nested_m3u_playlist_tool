@@ -1,0 +1,17 @@
+.mp3
+.ogg
+.flac
+.wav
+.aac
+.aiff
+.mid
+.mod
+.wma
+.psf
+.usf
+.minipsf
+.spc
+.gym
+.vgm
+.miniusf
+

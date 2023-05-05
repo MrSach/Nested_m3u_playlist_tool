@@ -1,0 +1,112 @@
+# depslib dependency file v1.0
+1657806503 source:/home/user/CodeBlocks/personal_cpp_project/m3u_playlist_reader_test_7/src/m3u_playlist_file_text.cpp
+	<iostream>
+	<fstream>
+	"m3u_playlist_file_text.hpp"
+
+1657806414 /home/user/CodeBlocks/personal_cpp_project/m3u_playlist_reader_test_7/include/m3u_playlist_file_text.hpp
+	<fstream>
+
+1651931077 source:/home/user/CodeBlocks/personal_cpp_project/m3u_playlist_reader_test_7/main.cpp
+	"m3u_playlist_file_text.hpp"
+	"basic_ext.hpp"
+	<iostream>
+	<sstream>
+	<iomanip>
+	<fstream>
+	<string>
+
+1651931106 /home/user/CodeBlocks/personal_cpp_project/m3u_playlist_reader_test_7/basic_ext.hpp
+	<string>
+
+1657817577 source:/home/user/CodeBlocks/personal_cpp_project/m3u_playlist_reader_test_7/src/playlist_entry.cpp
+	"playlist_entry.hpp"
+
+1657798410 /home/user/CodeBlocks/personal_cpp_project/m3u_playlist_reader_test_7/include/playlist_entry.hpp
+	<string>
+
+1683311236 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/main.cpp
+	<iostream>
+	<sstream>
+	<iomanip>
+	<fstream>
+	<string>
+	<filesystem>
+	"m3u_playlist_file_text.hpp"
+	"ext_list.hpp"
+	"file_not_found_exception.hpp"
+	"file_cannot_be_opened_exception.hpp"
+
+1683311236 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/m3u_playlist_file_text.hpp
+	<fstream>
+	<string>
+	<vector>
+	"playlist_entry.hpp"
+
+1651931106 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/basic_ext.hpp
+	<string>
+
+1683311495 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/playlist_entry.cpp
+	"playlist_entry.hpp"
+
+1683311576 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/playlist_entry.hpp
+	<string>
+	<filesystem>
+
+1683311236 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/m3u_playlist_file_text.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<algorithm>
+	<sstream>
+	"m3u_playlist_file_text.hpp"
+
+1665476290 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/csv_file.cpp
+	<fstream>
+	<algorithm>
+	<sstream>
+	<iterator>
+	"csv_file.hpp"
+
+1665236435 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/csv_file.hpp
+	<vector>
+	<string>
+	<iostream>
+
+1665490652 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/text_data_type_parser.cpp
+	"text_data_type_parser.hpp"
+
+1682252694 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/text_data_type_parser.hpp
+	<string>
+	<algorithm>
+	<map>
+	<vector>
+	<iostream>
+
+1683309955 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/ext_list.cpp
+	<system_error>
+	<filesystem>
+	<iostream>
+	<string>
+	<exception>
+	"ext_list.hpp"
+	"file_not_found_exception.hpp"
+
+1683308161 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/ext_list.hpp
+	<string>
+	<fstream>
+	<vector>
+	<filesystem>
+
+1683309309 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/file_not_found_exception.hpp
+	<exception>
+
+1683309336 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/file_not_found_exception.cpp
+	"file_not_found_exception.hpp"
+
+1683309580 source:/home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/src/file_cannot_be_opened_exception.cpp
+	"file_cannot_be_opened_exception.hpp"
+
+1683309533 /home/user/cpp/personal_cpp_project/m3u_playlist_reader_test_7/include/file_cannot_be_opened_exception.hpp
+	<exception>
+

@@ -1,0 +1,9 @@
+#EXTM3U
+#EXTINF:0,Basic Sequence
+relaxed/basic_sequence.ogg
+#EXTINF:0,Another Unengaging Melody
+relaxed/AUM.ogg
+#EXTINF:0,Focused
+relaxed/focused.ogg
+#EXTINF:0,Flowing
+relaxed/flow.ogg
