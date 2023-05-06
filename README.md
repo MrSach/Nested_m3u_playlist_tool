@@ -66,3 +66,4 @@ Perhaps one day I may actually build enough of it to be satisfied?
 We'll wait and see for now...
 
 Note that this program was developed using an IDE, namely Code::Blocks.
+To run, clone the repository, open the project in Code::Blocks, Build and run the program.
