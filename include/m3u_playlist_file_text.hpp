@@ -1,12 +1,12 @@
 #pragma once
-#ifndef M3U_PLAYLIST_FILE_TEXT_HPP
-#define M3U_PLAYLIST_FILE_TEXT_HPP
 
 #include <fstream>
 #include <string>
 #include <vector>
+#include <filesystem>
 
-#include "playlist_entry.hpp"
+#include "ext_list.hpp"
+#include "m3u_playlist_file_text_entry.hpp"
 
 class m3u_playlist_file_text
 {
@@ -20,7 +20,7 @@ class m3u_playlist_file_text
 		/*
             Constructor - string parameter - file path
 		*/
-		m3u_playlist_file_text (const std::string input_path);
+		m3u_playlist_file_text (const std::filesystem::path & input_path);
 
 		/*
 			Destructor
@@ -36,22 +36,6 @@ class m3u_playlist_file_text
 			Copy Assignment.
 		*/
 		m3u_playlist_file_text & operator = (const m3u_playlist_file_text & other);
-
-		/*
-			Get the number of active instances for the class.
-		*/
-		virtual size_t get_counter () const
-		{
-			return m_counter;
-		}
-
-		/*
-			Set the counter of the class.
-		*/
-		void set_counter (size_t & val)
-		{
-			m_counter = val;
-		}
 
 		/*
 			Check the file path of the input file.
@@ -90,34 +74,27 @@ class m3u_playlist_file_text
 	protected:
 
 		/*
-			Number of active instances for current class.
-		*/
-		static size_t m_counter;
-
-		/*
-			Number of total historic instances created for this class since program execution.
-		*/
-		static size_t m_total;
-
-		/*
-			Number of total instances that have been deleted from this class.
-		*/
-		static size_t m_deleted;
-
-		/*
             File path for m3u playlist
 		*/
-		std::string file_path;
+		std::filesystem::path file_path;
 
 		/*
             Folder of playlist file
 		*/
-		std::string file_folder;
+		std::filesystem::path file_folder;
 
 		/*
             Input file - fstream object
 		*/
 		std::fstream input_file;
+
+		/*
+			File extension lists.
+			One for multimedia, one for nested playlist files and a combined list with both.
+		*/
+		ext_list multimedia_file_extension {"resource/multimedia_file_extension.txt"};
+		ext_list playlist_file_extension {"resource/playlist_file_extension.txt"};
+		ext_list aggregate_list {multimedia_file_extension + playlist_file_extension};
 
 		/*
             File contents
@@ -127,22 +104,6 @@ class m3u_playlist_file_text
 		/*
             List of playlist entries
 		*/
-		std::vector <playlist_entry> list_entry {};
+		std::vector <m3u_playlist_file_text_entry> file_entry {};
 
-		/*
-            Functor object - algorithm for generating playlist entries from file contents.
-		*/
-        class m3u_entry_processor
-        {
-            public:
-                m3u_entry_processor ();
-                ~ m3u_entry_processor ();
-
-                /*
-                    Functor object function override.
-                */
-                void operator () (const std::string s);
-        };
 };
-
-#endif // M3U_PLAYLIST_FILE_TEXT_HPP

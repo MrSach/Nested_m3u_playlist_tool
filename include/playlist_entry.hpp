@@ -34,29 +34,7 @@ class playlist_entry
 		*/
 		playlist_entry & operator = (const playlist_entry & other);
 
-		/*
-
-		*/
-		virtual size_t get_counter () const;
-
-		virtual void set_counter (const std::size_t & val);
-
 	protected:
-
-		/*
-			Number of active instances in playlist.
-		*/
-		inline static size_t m_counter {0};
-
-		/*
-			Number of total instances in playlist since execution.
-		*/
-		inline static size_t m_total {0};
-
-		/*
-			Number of deleted instances from playlist since execution.
-		*/
-		inline static size_t m_deleted {0};
 
 		/*
 			Title of the soundtrack to be displayed in the playlist.
@@ -68,10 +46,6 @@ class playlist_entry
 		*/
 		std::filesystem::path filename;
 
-		/*
-			Length of soundtrack.
-		*/
-		long double time;
 };
 
 #endif // PLAYLIST_ENTRY_HPP

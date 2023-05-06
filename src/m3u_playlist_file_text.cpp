@@ -3,12 +3,10 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
+#include <filesystem>
+#include <string>
 
 #include "m3u_playlist_file_text.hpp"
-
-/*
-	Initialise static variables.
-*/
 
 /*
 	Initialise active instance data, historic instance data and data for inactive instances.
@@ -16,28 +14,30 @@
 	And how many have been created since execution...
 	How many have been deleted since execution...
 */
-size_t m3u_playlist_file_text::m_counter {0};
-size_t m3u_playlist_file_text::m_total {0};
-size_t m3u_playlist_file_text::m_deleted {0};
 
 /*
 	Constructor
 */
 m3u_playlist_file_text::m3u_playlist_file_text ()
+:
+	file_path {},
+	file_folder {},
+	input_file {}
 {
-	++m3u_playlist_file_text::m_counter;
-	++m3u_playlist_file_text::m_total;
+
 }
 
 /*
     Constructor - string parameter - file path
 */
-m3u_playlist_file_text::m3u_playlist_file_text (const std::string input_path)
+m3u_playlist_file_text::m3u_playlist_file_text (const std::filesystem::path & input_path)
+:
+	file_path {input_path},
+	file_folder {input_path},
+	input_file {std::fstream (input_path, std::ios::in)}
 {
-    ++m3u_playlist_file_text::m_counter;
-	++m3u_playlist_file_text::m_total;
-
-	this->input_file = std::fstream (input_path, std::ios::in);
+	file_folder.remove_filename();
+	//this->input_file = std::fstream (input_path, std::ios::in);
 	this->scan_playlist_file ();
 	this->generate_entries ();
 }
@@ -47,9 +47,6 @@ m3u_playlist_file_text::m3u_playlist_file_text (const std::string input_path)
 */
 m3u_playlist_file_text::~m3u_playlist_file_text ()
 {
-	--m3u_playlist_file_text::m_counter;
-	++m3u_playlist_file_text::m_deleted;
-
 	if ( this->m3u_playlist_file_text::input_file . is_open () )
 	{
 		this->m3u_playlist_file_text::input_file . close ();
@@ -61,8 +58,7 @@ m3u_playlist_file_text::~m3u_playlist_file_text ()
 */
 m3u_playlist_file_text::m3u_playlist_file_text (const m3u_playlist_file_text & other)
 {
-	++m3u_playlist_file_text::m_counter;
-	++m3u_playlist_file_text::m_total;
+
 }
 
 /*
@@ -134,7 +130,9 @@ bool m3u_playlist_file_text::scan_m3u_header ()
 
 bool m3u_playlist_file_text::probe_m3u_entries ()
 {
-    for (std::string buff {}; (input_file >> buff); )
+	std::string buff {};
+	std::getline (input_file, buff);
+    for ( ; !(input_file.eof()); std::getline (input_file, buff) )
     {
         this->contents.push_back (buff);
     }
@@ -158,28 +156,6 @@ void m3u_playlist_file_text::display_m3u_contents ()
     std::cout << std::endl;
 }
 
-m3u_playlist_file_text::m3u_entry_processor::m3u_entry_processor ()
-{
-
-};
-
-m3u_playlist_file_text::m3u_entry_processor::~m3u_entry_processor ()
-{
-
-};
-
-/*
-void m3u_playlist_file_text::m3u_entry_processor::operator () (const std::string s)
-{
-    std::string title {};
-    double length {};
-    if (s.find ("#EXTINF") )
-    {
-
-    }
-}
-*/
-
 bool m3u_playlist_file_text::generate_entries ()
 {
 	/*
@@ -188,110 +164,75 @@ bool m3u_playlist_file_text::generate_entries ()
     bool new_entry {1};
 
     /*
-		Playlist file extension
-	*/
-	std::vector <std::string> file_extension_list
-	{
-		{
-			".mp3",
-			".ogg",
-			".flac",
-			".wav",
-			".aac",
-			".aiff",
-			".mid",
-			".mod",
-			".wma",
-			".psf",
-			".usf",
-			".minipsf",
-			".spc",
-			".gym",
-			".vgm",
-			".miniusf"
-		}
-	};
-
-	std::vector <std::string> playlist_extension_list
-	{
-		{
-			".m3u"
-		}
-	};
-
-    /*
 		Loop through line by line.
+		"i" is the iterator for the line of the file contents.
+		"j" is the iterator for the playlist entry in the program that is currently being handled for buffering data into.
+		The file itself is not changed as it is opened for reading.
+		The data being buffered is for the program to generate metadata about the playlist entries.
     */
-    for (const std::string & s : this->contents)
+    for (std::size_t i {0}, j {0}; i < this->contents.size(); ++i)
     {
+		std::string s {this->contents.at(i)};
 		/*
-
+			Check if the header for a new playlist entry exists.
+			Also check if a new entry flag is not already enabled.
+			This is enabled by default as the first vector element is already initialised.
 		*/
 		std::string new_entry_header { "#EXTINF:" };
-
-		/*
-			File extension delimiter
-		*/
-		wchar_t ext_delim { '.' };
-
-		/*
-			Check length of the line before checking for any headers.
-		*/
-		if (s.length () >= 8)
+		std::size_t header_position {(s.find (new_entry_header))};
+//		std::cout << header_position << std::endl;
+		if ((header_position == 0))// && (new_entry == 0))
 		{
-			/*
-				Check for a new entry line that opens a new entry in the playlist.
-			*/
-			std::string meta_check {s.substr (0, 8)};
-
-			/*
-				Check for the header for a new playlist entry.
-			*/
-			if (meta_check == new_entry_header)
+			if (s.length () > 8)
 			{
-				if (s.length () > 8)
+				if (new_entry == 0)
 				{
-					new_entry == 1;
+					++j;
+					new_entry = 1;
 				}
-				else
+				this->file_entry.emplace_back();
+				/*
+					After the "#EXTINF:", find the occurrence of a comma.
+					Get the digits between to determine the track time.
+				*/
+				char metadata_delimiter { ',' };
+				std::size_t time_delimiter {s.find (metadata_delimiter, 8)};
+				if (time_delimiter < std::string::npos)
 				{
-					new_entry == false;
-				}
-			}
+					/*
+						Process track time.
+						locate the comma after the time digits.
+						Between the "#EXTINF:" header and the comma should be the track time data string.
+						Process this through a stringstream and typecast to the target double value.
+					*/
+					std::string timer_str {s.substr (8, time_delimiter - 8)};
+					std::stringstream ss {};
+					ss << timer_str;
+					double timer_buffer {};
+					ss >> timer_buffer;
+					this->file_entry.at(j).set_timer (timer_buffer);
+	//				std::cout << "Timer = " << this->file_entry.at(j).get_timer() << std::endl;
 
-			else
-			{
-
-			}
-		}
-		if ( new_entry == 1)
-		{
-			wchar_t metadata_delimiter { ',' };
-			size_t time_delim {s.find (metadata_delimiter, 8)};
-			if (time_delim < std::string::npos)
-			{
-				std::string timer_str {s.substr (8, time_delim - 8)};
-				size_t file_ext_pos { s.rfind (".") };
-				//std::cout << file_ext_pos << std::endl;
-				std::stringstream ss {};
-				for (size_t index {file_ext_pos}; index < s.length (); ++index)
-				{
-					ss << s.at (index);
+					/*
+						Process the track title to display in the current playlist.
+						First, get the length of the title.
+						Next, use the substr command to then get the character string, after the comma and up to the end of the line.
+					*/
+					std::size_t title_placeholder_length {s.length() - s.rfind (metadata_delimiter)};
+					//std::cout << title_placeholder_length << std::endl;
+					std::string title_placeholder {s.substr (time_delimiter + 1, title_placeholder_length)};
+					this->file_entry.at(j).set_display_title(title_placeholder);
+					std::cout << this->file_entry.at(j).get_display_title() << std::endl;
 				}
-				for (const std::string & ext : file_extension_list)
-				{
-					std::cout << ext << std::endl;
-					if (ss.str () == ext)
-					{
-						std::cout << "YEY" << std::endl;
-						std::string track_title { s.substr (time_delim + 1, s.length () ) };
-						std::cout << track_title << std::endl;
-					}
-				}
+				new_entry = 0;
 			}
 		}
 		else
+		/*
+			Check if this line is populated with a relative file path.
+		*/
 		{
+			std::filesystem::path target {};
 
 		}
     }

@@ -3,17 +3,18 @@
 #include <iostream>
 #include <string>
 #include <exception>
+#include <vector>
 
 #include "ext_list.hpp"
 #include "file_not_found_exception.hpp"
 
-ext_list::ext_list (void)
+ext_list::ext_list ()
 :
 	file_path {},
 	input_file {},
 	file_ext {}
 {
-	//ctor
+
 }
 
 ext_list::ext_list (const std::string & str)
@@ -79,12 +80,12 @@ bool ext_list::set_file_path (const std::string & str)
 	return flag;
 }
 
-std::string ext_list::get_file_path (void)
+std::string ext_list::get_file_path ()
 {
 	return this->file_path;
 }
 
-void ext_list::load_input_file (void)
+void ext_list::load_input_file ()
 {
 	if (std::filesystem::exists (this->file_path))
 	{
@@ -100,7 +101,7 @@ void ext_list::load_input_file (void)
 	}
 }
 
-void ext_list::set_file_ext (void)
+void ext_list::set_file_ext ()
 {
 	if (input_file.is_open())
 	{
@@ -124,7 +125,7 @@ void ext_list::set_file_ext (void)
 	}
 }
 
-void ext_list::display_file_ext_list (void)
+void ext_list::display_file_ext_list ()
 {
 	std::cout << std::endl;
 	std::cout << "Displaying playlist file entry extensions..." << std::endl;
@@ -135,8 +136,12 @@ void ext_list::display_file_ext_list (void)
 	std::cout << std::endl;
 }
 
-ext_list::~ext_list (void)
+std::vector <std::string> ext_list::get_file_ext_list ()
 {
-	//dtor
+	return this->file_ext;
+}
+
+ext_list::~ext_list ()
+{
 	input_file.close();
 }
